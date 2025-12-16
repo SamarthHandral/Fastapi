@@ -14,3 +14,10 @@ def read_root():
 def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
 
+@app.get("/search")
+def search_item(q:str,number:int = 100):
+    return {"query":q,"number":number}
+
+@app.get("/poo/{name}")
+def search_items(name:str, limit: int = 10):
+    return {"query": name, "limit": limit}
