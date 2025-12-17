@@ -1,8 +1,7 @@
 from typing import Union
 
-from fastapi import FastAPI
-from pydantic import BaseModel 
-from pydantic import EmailStr
+from fastapi import FastAPI, HTTPException, status
+from pydantic import BaseModel,  EmailStr
 
 app = FastAPI()
 
@@ -30,10 +29,21 @@ class UserCreate(BaseModel):
     email : EmailStr
     age : int
 
-@app.post("/users")
+class UserResponce(BaseModel):
+    name:str
+    email : EmailStr
+
+
+@app.post(
+    "/users",
+    response_model=UserResponce,
+    status_code=status.HTTP_201_CREATED
+    )
 def create_user(user: UserCreate):
-    return {
-        "message": "user created sucessfully",
-        "user": user
-    }
+    if user.age < 18:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="user must be at least 18 years old"
+        )
+    return user
     
