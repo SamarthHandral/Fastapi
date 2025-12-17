@@ -1,6 +1,8 @@
 from typing import Union
 
 from fastapi import FastAPI
+from pydantic import BaseModel 
+from pydantic import EmailStr
 
 app = FastAPI()
 
@@ -21,3 +23,17 @@ def search_item(q:str,number:int = 100):
 @app.get("/poo/{name}")
 def search_items(name:str, limit: int = 10):
     return {"query": name, "limit": limit}
+
+
+class UserCreate(BaseModel):
+    name: str
+    email : EmailStr
+    age : int
+
+@app.post("/users")
+def create_user(user: UserCreate):
+    return {
+        "message": "user created sucessfully",
+        "user": user
+    }
+    
