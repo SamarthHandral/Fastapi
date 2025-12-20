@@ -3,6 +3,10 @@
 from fastapi import FastAPI, HTTPException, status
 # from pydantic import BaseModel,  EmailStr
 from app.routers.users import router as users_router
+from app.db.database import engine
+from app.db import models
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
