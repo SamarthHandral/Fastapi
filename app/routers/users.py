@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status,  Depends, Query, HTTPException
 from app.schemas.users import UserCreate, UserResponce
-from app.services.users_service import create_user, get_users, get_users_by_name
+from app.services.users_service import create_user, get_users, get_users_by_name,update_user,delete_user
 from app.db.database import get_db
 from sqlalchemy.orm import Session
 from typing import List
@@ -50,3 +50,24 @@ def search_users(
        
     return users
    
+@router.put(
+    "/{user_id}",
+    response_model=UserResponce
+)
+def update_user_route(
+    user_id: int,
+    user: UserCreate,
+    db: Session = Depends(get_db)
+):
+    return update_user(db,user_id,user)
+
+
+@router.delete(
+    "/{user_id}",
+    status_code=status.HTTP_200_OK
+)
+def delete_user_route(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+    return delete_user(db,user_id)
